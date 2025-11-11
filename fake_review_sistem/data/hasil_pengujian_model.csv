@@ -1,0 +1,4 @@
+,accuracy,precision,recall,f1-score
+Naive Bayes,51.0,49.51,51.0,50.19
+Logistic Regression,47.5,48.4,47.5,47.92
+Decision Tree,53.5,43.91,53.5,47.67

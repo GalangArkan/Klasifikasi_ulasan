@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 fade-in">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 700px; margin: auto;">
+    <div class="text-center">
+      <div class="avatar mb-3">
+        <div class="circle">
+          {{ user.name[0]|upper if user.name else user.username[0]|upper }}
+        </div>
+      </div>
+      <h3 class="fw-bold">{{ user.name if user.name else 'Pengguna Tanpa Nama' }}</h3>
+      <p class="text-muted mb-4">@{{ user.username }}</p>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <strong>Email</strong>
+        <p>{{ user.email if user.email else 'Belum diisi' }}</p>
+      </div>
+      <div class="col-md-6">
+        <strong>Tanggal Bergabung</strong>
+        <p>{{ user.created_at if user.created_at else '-' }}</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="text-center">
+      <a href="{{ url_for('dashboard') }}" class="btn btn-secondary me-2">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
+      </a>
+      <a href="#" class="btn btn-warning">
+        <i class="fa-solid fa-key"></i> Ubah Password
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fade-in { animation: fadeIn 0.6s ease-in; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .circle {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #ff6600, #ff3300);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 36px;
+    margin: auto;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.4);
+  }
+</style>
+{% endblock %}

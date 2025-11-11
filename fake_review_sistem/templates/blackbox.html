@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Black Box Testing</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fafafa;
+      margin: 20px;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #b10000;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f44336;
+      color: white;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>Pengujian Sistem - Black Box Testing</h2>
+  <table>
+    <tr>
+      <th>No</th>
+      <th>Skenario Pengujian</th>
+      <th>Langkah Uji / Input</th>
+      <th>Output Diharapkan</th>
+      <th>Output Aktual</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Login dengan data valid</td>
+      <td>Username dan password benar</td>
+      <td>Masuk ke halaman Dashboard</td>
+      <td>Halaman Dashboard tampil</td>
+      <td class="success">✔ Berhasil</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Analisis ulasan produk</td>
+      <td>Input: “Barangnya bagus banget, sesuai deskripsi.”</td>
+      <td>Tampil hasil: Asli / Palsu</td>
+      <td>Tampil hasil: Asli (0.76)</td>
+      <td class="success">✔ Berhasil</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Lihat Riwayat Analisis</td>
+      <td>Klik menu “Riwayat”</td>
+      <td>Menampilkan semua data analisis</td>
+      <td>Data tampil dengan benar</td>
+      <td class="success">✔ Berhasil</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Logout dari sistem</td>
+      <td>Klik tombol logout</td>
+      <td>Kembali ke halaman login</td>
+      <td>Halaman login tampil</td>
+      <td class="success">✔ Berhasil</td>
+    </tr>
+  </table>
+</body>
+</html>

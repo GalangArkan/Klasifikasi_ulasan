@@ -1,0 +1,10 @@
+flask
+pandas
+numpy
+scikit-learn
+nltk
+Sastrawi
+beautifulsoup4
+requests
+joblib
+mysql-connector-python

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 fade-in">
+  <h3 class="text-primary mb-3">
+    <i class="fas fa-info-circle me-2"></i> Detail Analisis Ulasan
+  </h3>
+
+  <!-- Info umum -->
+  <div class="card p-3 shadow-sm mb-3">
+    <p><strong>Kategori Produk:</strong> {{ category }}</p>
+    <p><strong>Ulasan:</strong> {{ review }}</p>
+    <p>
+      <strong>Rata-rata Keyakinan:</strong> 
+      <span class="badge bg-{{ conf_color }}">{{ avg_confidence }}% - {{ conf_label }}</span>
+    </p>
+  </div>
+
+  <!-- 📊 Tabel Analisis Tiap Model -->
+  <div class="table-responsive mt-3">
+    <table class="table table-bordered text-center align-middle shadow-sm">
+      <thead class="table-warning">
+        <tr>
+          <th>Model</th>
+          <th>Akurasi Model</th>
+          <th>P(Asli)</th>
+          <th>P(Palsu)</th>
+          <th>Prediksi</th>
+          <th>Indikator</th>
+          <th>Tanggal Analisis</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in explanations %}
+        <tr>
+          <td class="fw-bold">{{ row.model }}</td>
+          <td>
+            {% if accuracies[row.model] %}
+              {{ (accuracies[row.model] * 100)|round(2) }}%
+            {% else %}
+              -
+            {% endif %}
+          </td>
+
+          <!-- Bar P(Asli) -->
+          <td>
+            <div class="progress" style="height: 12px;">
+              <div class="progress-bar bg-success" style="width: {{ row.p_asli }}%;"></div>
+            </div>
+            <small>{{ row.p_asli }}%</small>
+          </td>
+
+          <!-- Bar P(Palsu) -->
+          <td>
+            <div class="progress" style="height: 12px;">
+              <div class="progress-bar bg-danger" style="width: {{ row.p_palsu }}%;"></div>
+            </div>
+            <small>{{ row.p_palsu }}%</small>
+          </td>
+
+          <!-- Prediksi -->
+          <td>
+            {% if row.prediction == "Asli" %}
+              <span class="badge bg-success px-3 py-2">Asli</span>
+            {% else %}
+              <span class="badge bg-danger px-3 py-2">Palsu</span>
+            {% endif %}
+          </td>
+
+          <!-- Indikator alasan -->
+          <td class="text-start small">{{ row.reason | safe }}</td>
+          <td>{{ row.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 💬 Tabel Ulasan Serupa -->
+  {% if similar_table %}
+  <hr>
+  <h5 class="text-success mt-4">
+    <i class="fas fa-clone"></i> Ulasan Serupa dari Dataset
+  </h5>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover shadow-sm">
+      <thead class="table-light">
+        <tr>
+          <th>No</th>
+          <th>Ulasan Serupa</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in similar_table %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ row.ulasan | safe }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- 🔙 Tombol kembali -->
+  <div class="text-center mt-4">
+    <a href="{{ url_for('history') }}" class="btn btn-outline-secondary shadow-sm">
+      <i class="fas fa-arrow-left"></i> Kembali ke Riwayat
+    </a>
+  </div>
+</div>
+
+<!-- 🎨 Styling -->
+<style>
+  .fade-in { animation: fadeIn 0.5s ease-in-out; }
+  @keyframes fadeIn { from {opacity:0;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+  table { font-size: 0.9rem; }
+  td, th { vertical-align: middle; }
+  .badge { font-size: 0.85rem; }
+  .progress { background-color: #f1f1f1; border-radius: 6px; }
+  .progress-bar { transition: width 0.6s ease; }
+</style>
+{% endblock %}

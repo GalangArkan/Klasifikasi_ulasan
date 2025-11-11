@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 fade-in">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-danger">
+      <i class="fa-solid fa-robot"></i> Hasil Analisis Sistem
+    </h2>
+    <p class="text-muted">
+      Sistem telah menganalisis ulasan kamu menggunakan beberapa model <strong>Machine Learning</strong>.
+    </p>
+  </div>
+
+  <div class="card shadow-lg border-0 p-4 mx-auto" style="max-width: 900px; border-radius: 18px;">
+    <div class="text-center mb-4">
+      <h5 class="fw-bold text-secondary mb-2">Ulasan:</h5>
+      <blockquote class="blockquote text-dark fst-italic border-start border-4 border-warning ps-3">
+        “{{ review }}”
+      </blockquote>
+    </div>
+
+    <!-- ✳️ Tabel hasil analisis -->
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center shadow-sm rounded-3 overflow-hidden">
+        <thead class="table-warning">
+          <tr>
+            <th class="fw-semibold">Model</th>
+            <th class="fw-semibold">P(Asli)</th>
+            <th class="fw-semibold">P(Palsu)</th>
+            <th class="fw-semibold">Interpretasi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for model, data in results.items() %}
+          <tr class="fade-row">
+            <td class="fw-semibold">{{ model }}</td>
+            <td>{{ data.p_asli }}%</td>
+            <td>{{ data.p_palsu }}%</td>
+            <td>
+              {% if data.p_asli > data.p_palsu %}
+                <span class="badge bg-success px-3 py-2 shadow-sm">Asli</span>
+              {% elif data.p_palsu > data.p_asli %}
+                <span class="badge bg-danger px-3 py-2 shadow-sm">Palsu</span>
+              {% else %}
+                <span class="badge bg-secondary px-3 py-2 shadow-sm">Netral</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 💡 Kesimpulan Akhir -->
+    <div class="text-center mt-4 p-4 conclusion-box">
+      <h5 class="fw-bold text-primary mb-3">
+        <i class="fa-solid fa-brain"></i> Kesimpulan Sistem
+      </h5>
+      <p class="text-muted">
+        Berdasarkan hasil analisis ketiga model, sistem menyimpulkan bahwa ulasan ini:
+      </p>
+
+      <h3 class="fw-bold text-{{ final_color }} mt-2">{{ final_label }}</h3>
+      <div class="progress mt-3" style="height: 18px; border-radius: 10px; max-width: 500px; margin: 0 auto; background-color: #f5f5f5;">
+        <div class="progress-bar bg-{{ final_color }}" role="progressbar"
+             style="width: 0%; transition: width 1.3s ease-in-out;"
+             id="confidence-bar"></div>
+      </div>
+      
+      <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const bar = document.getElementById("confidence-bar");
+        const value = {{ final_confidence_value|round(2) }};
+        setTimeout(() => { bar.style.width = value + "%"; }, 300);
+      });
+      </script>
+      
+      <p class="mt-3 fw-semibold text-dark">
+        Tingkat keyakinan sistem: <span class="text-{{ final_color }}">{{ final_text }}</span>
+      </p>
+    </div>
+
+    <!-- 🎯 Tombol kembali -->
+    <div class="text-center mt-4">
+      <a href="{{ url_for('analyze') }}" class="btn btn-warning btn-lg shadow-sm hover-glow">
+        <i class="fa-solid fa-arrow-left"></i> Analisis Lagi
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ✨ Styling tambahan -->
+<style>
+  .fade-in { animation: fadeIn 0.7s ease-in-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-row {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.6s ease;
+  }
+  .fade-row.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 12px rgba(255, 165, 0, 0.7);
+    transform: translateY(-2px);
+  }
+
+  .conclusion-box {
+    background-color: #fff8f2;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(255, 193, 7, 0.2);
+  }
+</style>
+
+<!-- 🌀 Animasi baris tabel -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const rows = document.querySelectorAll(".fade-row");
+  rows.forEach((row, index) => {
+    setTimeout(() => row.classList.add("show"), 250 * index);
+  });
+});
+</script>
+
+{% endblock %}

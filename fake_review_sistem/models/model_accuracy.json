@@ -1,0 +1,7 @@
+{
+  "accuracies": {
+    "Naive Bayes": 0.9666666666666667,
+    "Logistic Regression": 0.97,
+    "Decision Tree": 0.98
+  }
+}

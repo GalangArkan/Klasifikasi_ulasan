@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4 fade-in">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">  <!-- Header Riwayat -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="text-danger fw-bold mb-0">
+      <i class="fas fa-history me-2"></i> Riwayat Analisis
+    </h3>
+
+    <!-- Tombol Hapus -->
+    <button id="deleteToggle" class="btn btn-outline-danger btn-sm">
+      <i class="fas fa-trash"></i> Hapus
+    </button>
+  </div>
+
+  <p class="text-muted mb-4">
+    Menampilkan hasil analisis ulasan yang pernah dilakukan oleh pengguna.
+  </p>
+
+  <!-- Tabel Riwayat -->
+  <form id="deleteForm" action="{{ url_for('delete_history') }}" method="POST">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-danger text-center align-middle">
+          <tr>
+            <th style="display:none;" class="check-col">Pilih</th>
+            <th style="width:5%;">No</th>
+            <th style="width:15%;">Kategori</th>
+            <th style="width:30%;">Ulasan</th>
+            <th style="width:20%;">Model yang Digunakan</th>
+            <th style="width:10%;">Prediksi Akhir</th>
+            <th style="width:10%;">Confidence</th>
+            <th style="width:10%;">Tanggal Analisis</th>
+            <th style="width:10%;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in data %}
+          <tr class="align-middle">
+            <td style="display:none;" class="check-col">
+              <input type="checkbox" name="selected_ids" value="{{ item.id }}">
+            </td>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.category or '-' }}</td>
+            <td class="text-start">{{ item.review }}</td>
+            <td>{{ item.models }}</td>
+            <td>
+              {% if item.final_pred == 'Asli' %}
+                <span class="badge bg-success">Asli</span>
+              {% else %}
+                <span class="badge bg-danger">Palsu</span>
+              {% endif %}
+            </td>
+            <td><b>{{ item.conf }}%</b></td>
+            <td class="text-muted">{{ item.created_at }}</td>
+            <td>
+              <a href="{{ url_for('detail_analysis', id=item.id) }}" class="btn btn-primary btn-sm">
+                Detail
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Jika belum ada data -->
+    {% if data|length == 0 %}
+    <div class="text-center text-muted py-4">
+      Belum ada riwayat analisis.
+    </div>
+    {% endif %}
+
+    <!-- Tombol Hapus Terpilih -->
+    <div id="deleteControls" class="text-center mt-3" style="display:none;">
+      <button type="submit" class="btn btn-danger me-2">
+        <i class="fas fa-trash-alt"></i> Hapus Terpilih
+      </button>
+      <button type="button" id="cancelDelete" class="btn btn-secondary">
+        Batal
+      </button>
+    </div>
+  </form>
+</div>
+
+  </div>
+</div><!-- 🔧 Script Toggle Hapus --><script>
+  const deleteBtn = document.getElementById("deleteToggle");
+  const cancelBtn = document.getElementById("cancelDelete");
+  const deleteControls = document.getElementById("deleteControls");
+  const checkCols = document.querySelectorAll(".check-col");
+
+  deleteBtn.addEventListener("click", () => {
+    checkCols.forEach(c => c.style.display = "");
+    deleteControls.style.display = "block";
+    deleteBtn.style.display = "none";
+  });
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", () => {
+      checkCols.forEach(c => c.style.display = "none");
+      deleteControls.style.display = "none";
+      deleteBtn.style.display = "inline-block";
+      document.querySelectorAll("input[name='selected_ids']").forEach(chk => chk.checked = false);
+    });
+  }
+</script><!-- 🎨 Animasi --><style>
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  th, td {
+    vertical-align: middle !important;
+  }
+</style>{% endblock %}
